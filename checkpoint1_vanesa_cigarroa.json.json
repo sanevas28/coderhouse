@@ -1,0 +1,473 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "sender": "vanesa.cigarroa@aeropuertosargentina.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -208,
+        16
+      ],
+      "id": "d3aeb8ad-e271-4546-bf05-7e3d240fa923",
+      "name": "Gmail Trigger",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aEN4CpyCodwTuJqs",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-haiku-4-5-20251001",
+          "mode": "list",
+          "cachedResultName": "Claude Haiku 4.5"
+        },
+        "options": {
+          "maxTokensToSample": 1000,
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.6,
+      "position": [
+        704,
+        192
+      ],
+      "id": "d3e1c7cf-4da3-46ac-9f16-21ab72c49147",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"procesar\": true,\n  \"fecha\": \"13/09/2026 09:15\",\n  \"numero_caso\": \"08851349\",\n  \"categoria\": \"CARGA_EXTRAVIADA\",\n  \"guia_madre\": \"\",\n  \"guia_hija\": \"XXX-68080559\",\n  \"datos_faltantes\": [],\n  \"requiere_respuesta\": false,\n  \"respuesta_sugerida\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        160
+      ],
+      "id": "cca7a809-e1e7-46f2-bae7-1704374381f1",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get row(s) in sheet in Google SheeConsulta la hoja de Google Sheets para verificar si un número de caso ya se encuentra registrado. Utiliza el campo numero_caso del reclamo como valor de búsqueda. Devuelve la información encontrada si el caso existe. Si no encuentra coincidencias, informa que el caso no está registrado.",
+        "documentId": {
+          "__rl": true,
+          "value": "1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY",
+          "mode": "list",
+          "cachedResultName": "Reclamos_opertivos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        352
+      ],
+      "id": "e7d054c6-427c-41ea-a2aa-1bf72f80a466",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YJ7CxGJNfKjGri7o",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY",
+          "mode": "list",
+          "cachedResultName": "Reclamos_opertivos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ $json.output.fecha }}",
+            "numero_caso": "={{ $json.output.numero_caso }}",
+            "categoria": "={{ $json.output.categoria }}",
+            "guia_madre": "={{ $json.output.guia_madre }}",
+            "guia_hija": "={{ $json.output.guia_hija }}",
+            "datos_faltantes": "={{ $json.output.datos_faltantes }}",
+            "requiere_respuesta": "={{ $json.output.requiere_respuesta }}",
+            "respuesta_sugerida": "={{ $json.output.respuesta_sugerida }}"
+          },
+          "matchingColumns": [
+            "numero_caso"
+          ],
+          "schema": [
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "numero_caso",
+              "displayName": "numero_caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "guia_madre",
+              "displayName": "guia_madre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "guia_hija",
+              "displayName": "guia_hija",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_faltantes",
+              "displayName": "datos_faltantes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "requiere_respuesta",
+              "displayName": "requiere_respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "respuesta_sugerida",
+              "displayName": "respuesta_sugerida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "942a9969-7286-4d43-8e57-f0557923aca0",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YJ7CxGJNfKjGri7o",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "281d5312-6f74-4f2e-a963-db86905b3ade",
+              "leftValue": "= {{ $json.Subject }}",
+              "rightValue": "Cargas - Subcaso",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "e46563e6-bee3-452a-af8a-95b501beb99c",
+              "leftValue": "={{ $json.Subject }}",
+              "rightValue": "Aeropuertos Argentina 2000 - Caso",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        16
+      ],
+      "id": "3bf71bfa-a142-41b8-81f6-8b3d7f79190a",
+      "name": "FILTRO ASUNTO MAIL"
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "get",
+        "threadId": "={{ $('Gmail Trigger').item.json.threadId }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "3983b0ce-e915-4d34-b57f-c1fa7c5ac469",
+      "name": "CADENA DE MAIL",
+      "webhookId": "64b8f545-8cae-4467-9dbd-3bb3e19994e8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aEN4CpyCodwTuJqs",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function decodeBase64Url(data) {\n  if (!data) return '';\n\n  let base64 = data\n    .replace(/-/g, '+')\n    .replace(/_/g, '/');\n\n  while (base64.length % 4) {\n    base64 += '=';\n  }\n\n  return Buffer.from(base64, 'base64').toString('utf8');\n}\n\nfunction extractPlainText(payload) {\n  const texts = [];\n\n  function walk(part) {\n    if (!part) return;\n\n    if (part.mimeType === 'text/plain' && part.body?.data) {\n      texts.push(decodeBase64Url(part.body.data));\n    }\n\n    if (Array.isArray(part.parts)) {\n      for (const child of part.parts) {\n        walk(child);\n      }\n    }\n  }\n\n  walk(payload);\n  return texts.join('\\n');\n}\n\nconst thread = $json;\nconst messages = thread.messages || [];\n\nif (messages.length === 0) {\n  return [{\n    json: {\n      threadId: thread.id || '',\n      thread_text: ''\n    }\n  }];\n}\n\n// El último mensaje suele contener también la cadena anterior\nconst latestMessage = messages[messages.length - 1];\n\nlet text = extractPlainText(latestMessage.payload);\n\n// ----------------------------------------------------\n// LIMPIEZA DE CONTENIDO NO OPERATIVO\n// ----------------------------------------------------\n\ntext = text\n  // Normalizar saltos de línea\n  .replace(/\\r/g, '')\n\n  // Eliminar URLs entre corchetes\n  .replace(/\\[https?:\\/\\/[^\\]]+\\]/gi, '')\n\n  // Eliminar URLs sueltas\n  .replace(/https?:\\/\\/\\S+/gi, '')\n\n  // Eliminar líneas que contienen solamente sitios web\n  .replace(/^www\\..*$/gim, '')\n\n  // Eliminar datos típicos de firma corporativa\n  .replace(/^Jefe de Registro de Datos.*$/gim, '')\n  .replace(/^Autopista Tte\\..*$/gim, '')\n  .replace(/^T:\\s*\\+?\\d+.*$/gim, '')\n\n  // Eliminar textos de logos\n  .replace(/^\\[Logo.*\\]$/gim, '')\n\n  // Eliminar disclaimer del CRM\n  .replace(\n    /Por favor,\\s*asegúrese de que su respuesta sea completa[\\s\\S]*?Gracias\\./gi,\n    ''\n  )\n\n  // Compactar espacios\n  .replace(/[ \\t]+/g, ' ')\n  .replace(/\\n{3,}/g, '\\n\\n')\n  .trim();\n\n// ----------------------------------------------------\n// EXTRAER NÚMERO DE CASO PARA AYUDAR AL AGENTE\n// ----------------------------------------------------\n\nconst caseMatches = [\n  ...text.matchAll(/(?:Subcaso|Caso)\\s*#?\\s*(\\d{6,10})/gi)\n];\n\nconst numeroCaso =\n  caseMatches.length > 0\n    ? caseMatches[caseMatches.length - 1][1]\n    : '';\n\n// ----------------------------------------------------\n// RESULTADO\n// ----------------------------------------------------\n\nreturn [{\n  json: {\n    threadId: thread.id || '',\n    numero_caso_detectado: numeroCaso,\n    thread_text: text\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "bb63bd46-f023-4ba1-821e-48fcbd9ff9cb",
+      "name": "CONVIERTO HTML a TEXTO"
+    },
+    {
+      "parameters": {
+        "sendTo": "cigarroa.vanesa@gmail.com",
+        "subject": "=LOG IA - Caso {{ $('AGENTE CLASIFICADOR').item.json.output.numero_caso }}",
+        "emailType": "text",
+        "message": "=EJECUCIÓN AUTOMÁTICA - REGISTRO DE DATOS  \n\nFecha: {{ $('AGENTE CLASIFICADOR').item.json.output.fecha }}\nCaso: {{ $('AGENTE CLASIFICADOR').item.json.output.numero_caso }} Categoría: {{ $('AGENTE CLASIFICADOR').item.json.output.categoria }}  \nGuía madre: {{ $('AGENTE CLASIFICADOR').item.json.output.guia_madre }} \nGuía hija: {{ $('AGENTE CLASIFICADOR').item.json.output.guia_hija }}  \nDatos faltantes: {{ $('AGENTE CLASIFICADOR').item.json.output.datos_faltantes }} Requiere respuesta: {{ $('AGENTE CLASIFICADOR').item.json.output.requiere_respuesta }} Resultado: El reclamo fue procesado por el agente IA y enviado al registro de Google Sheets.  Este mensaje corresponde al Log de Control para supervisión humana.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1232,
+        0
+      ],
+      "id": "4d6714dd-71d7-458a-b839-ae7a9ff3b75b",
+      "name": "LOG DE CONTROL",
+      "webhookId": "6bb11ffa-3682-4268-b3d0-041e7a0c2dc9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aEN4CpyCodwTuJqs",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Sos un administrativo de la oficina de Registro de Datos, del sector de Recepción de Carga Aérea de Importación del Aeropuerto Internacional de Ezeiza.\n\nTu función es procesar únicamente reclamos recibidos por correo electrónico que hayan sido creados por Atención al Cliente a través del CRM.\n\nAnalizá el hilo completo del correo que se encuentra al final de este prompt.\n\nTu objetivo es:\n\n1. Clasificar el reclamo en una de estas categorías:\n*CARGA_EXTRAVIADA\n*BONIFICACION_DEMORA_OPERATIVA\n*GUIA_CAIDA\n*OTROS\n\nNo fuerces la clasificación. Si no existe información suficiente para determinar el motivo con claridad, utilizar OTROS.\n\n2. Identificar las guías aéreas presentes en cualquier parte del hilo.\n\nUna guía madre o MAWB suele tener formato:\n123-12345678\n\nUna guía hija o HAWB puede ser numérica o alfanumérica y puede presentarse, por ejemplo, como:\n\n*XXX-12345678\n*12345678\n*XXX-HA1234\n*HA1234_/\n\nLa guía hija puede contener letras, números y caracteres especiales. No asumir que siempre tendrá el prefijo XXX-.\n\nNo inventes ni completes caracteres que no estén presentes en el correo.\n\n3. Detectar información faltante.\n\nEl campo datos_faltantes debe ser siempre un array.\n\nSi no se encuentra ninguna guía aérea:\n[\"GUIA\"]\n\nSi no se puede determinar el motivo:\n[\"MOTIVO\"]\n\nSi faltan ambos:\n[\"GUIA\",\"MOTIVO\"]\n\nSi no falta información:\n[]\n\n4. Si falta información necesaria:\nrequiere_respuesta = true\npreparar en respuesta_sugerida un correo breve solicitando únicamente la información faltante.\n\nSi no falta información:\n\nrequiere_respuesta = false\nrespuesta_sugerida = \"\"\n5.Devuelve siempre todos los campos definidos por el Structured Output Parser.\n\nCuando un dato no se encuentre en el correo, devuelve una cadena vacía \"\".\n\nNunca inventes una guía, número de caso ni otro dato faltante.\n\n6. Una vez identificado y clasificado correctamente el reclamo, utiliza la herramienta de Google Sheets para registrar la información extraída.\n\nSolo debes registrar el reclamo cuando se haya identificado una guía aérea y el motivo pueda clasificarse correctamente.\n\nSi faltan datos necesarios, no registres el reclamo en Google Sheets. En ese caso, indica requiere_respuesta = true y prepara el correo solicitando la información faltante.\n\nNunca inventes información para completar campos de Google Sheets.\n\nAntes de registrar un reclamo, utiliza la herramienta de Google Sheets para verificar si el numero_caso ya existe. Si existe, considéralo un caso existente. Si no existe, continúa con el procesamiento normal.\n\nHILO COMPLETO DEL CORREO:\n\n{{ $json.thread_text }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        704,
+        0
+      ],
+      "id": "013fa7be-3cf4-437b-99c5-1c72fdb220f2",
+      "name": "AGENTE CLASIFICADOR"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "FILTRO ASUNTO MAIL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "LOG DE CONTROL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FILTRO ASUNTO MAIL": {
+      "main": [
+        [
+          {
+            "node": "CADENA DE MAIL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CADENA DE MAIL": {
+      "main": [
+        [
+          {
+            "node": "CONVIERTO HTML a TEXTO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONVIERTO HTML a TEXTO": {
+      "main": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AGENTE CLASIFICADOR": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "93635668-a135-454a-9e67-fdad47656cfd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0421b845a31b1d19e4bd04389668acfb9b8eb64d98177cc04c86f23e882a1c97"
+  },
+  "nodeGroups": [],
+  "id": "bRbn74b31qWtm875",
+  "tags": []
+}
