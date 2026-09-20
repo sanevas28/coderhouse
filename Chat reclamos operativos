@@ -1,0 +1,461 @@
+{
+  "name": "Chat reclamos operativos",
+  "nodes": [
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get row(s) in sheet in Google SheeConsulta la hoja de Google Sheets para verificar si un número de caso ya se encuentra registrado. Utiliza el campo numero_caso del reclamo como valor de búsqueda. Devuelve la información encontrada si el caso existe. Si no encuentra coincidencias, informa que el caso no está registrado.",
+        "documentId": {
+          "__rl": true,
+          "value": "1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY",
+          "mode": "list",
+          "cachedResultName": "Reclamos_opertivos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        192
+      ],
+      "id": "79523afd-d0d7-4ff3-b057-6bb29663bf1c",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YJ7CxGJNfKjGri7o",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY",
+          "mode": "list",
+          "cachedResultName": "Reclamos_opertivos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vzehTlB3LjbsGVPBUsIm_8mzzWESSmlSIknOrYq43YY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ $now.setZone('America/Argentina/Buenos_Aires').toFormat('dd/MM/yyyy HH:mm:ss') }}",
+            "numero_caso": "={{ $json.output.numero_caso }}",
+            "categoria": "={{ $json.output.clasificacion }}",
+            "guia_madre": "={{ $json.output.numero_guia_madre }}",
+            "guia_hija": "={{ $json.output.numero_guia_hija }}"
+          },
+          "matchingColumns": [
+            "numero_caso"
+          ],
+          "schema": [
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "numero_caso",
+              "displayName": "numero_caso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "guia_madre",
+              "displayName": "guia_madre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "guia_hija",
+              "displayName": "guia_hija",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_faltantes",
+              "displayName": "datos_faltantes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "requiere_respuesta",
+              "displayName": "requiere_respuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "respuesta_sugerida",
+              "displayName": "respuesta_sugerida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        784,
+        -16
+      ],
+      "id": "de14d6d2-7ea1-4b7d-af21-8fec0ef11815",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YJ7CxGJNfKjGri7o",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "cigarroa.vanesa@gmail.com",
+        "subject": "=LOG IA - Caso {{ $('AGENTE CLASIFICADOR').item.json.output.numero_caso }}",
+        "emailType": "text",
+        "message": "=EJECUCIÓN AUTOMÁTICA - REGISTRO DE DATOS  \n\nFecha: {{ $('AGENTE CLASIFICADOR').item.json.output.fecha }}\nCaso: {{ $('AGENTE CLASIFICADOR').item.json.output.numero_caso }} Categoría: {{ $('AGENTE CLASIFICADOR').item.json.output.categoria }}  \nGuía madre: {{ $('AGENTE CLASIFICADOR').item.json.output.guia_madre }} \nGuía hija: {{ $('AGENTE CLASIFICADOR').item.json.output.guia_hija }}  \nDatos faltantes: {{ $('AGENTE CLASIFICADOR').item.json.output.datos_faltantes }} Requiere respuesta: {{ $('AGENTE CLASIFICADOR').item.json.output.requiere_respuesta }} Resultado: El reclamo fue procesado por el agente IA y enviado al registro de Google Sheets.  Este mensaje corresponde al Log de Control para supervisión humana.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1008,
+        -16
+      ],
+      "id": "dc226c7e-7fc2-4d41-a255-dab9bd191090",
+      "name": "LOG DE CONTROL",
+      "webhookId": "c56f052e-31a8-4baf-922c-d6bd391d1b93",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "aEN4CpyCodwTuJqs",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "# ROL\nSos un administrativo de la oficina de Registro de Datos del sector de Recepción de Carga Aérea de Importación del Aeropuerto Internacional de Ezeiza.\n\nTu comunicación debe ser formal, técnica, clara y precisa.\n\n# ÁMBITO\nTu función se limita a procesar, clasificar y registrar reclamos recibidos por chat, generados por Atención al Cliente vía CRM.\n\nNo respondas consultas ajenas a la operativa de carga ni emitas opiniones personales.\n\n# OBJETIVO\nIdentificar, clasificar y registrar en Google Sheets los nuevos reclamos de importación que no hayan sido cargados previamente.\n\n# DATOS OBLIGATORIOS\nPara procesar un reclamo necesitás:\n\n- Número de caso\n- Número de guía hija\n- Número de guía madre\n- Motivo del reclamo\n\nSi falta uno o más datos, solicitá TODOS los datos faltantes en una única respuesta.\n\nNunca inventes datos.\n\n# CLASIFICACIÓN\nAsigná una única categoría:\n\n- CARGA_EXTRAVIADA\n- BONIFICACION_DEMORA_OPERATIVA\n- GUIA_CAIDA\n- OTROS\n\nSi la información es insuficiente o el motivo no corresponde claramente a las primeras tres categorías, utilizá OTROS.\n\n# VERIFICACIÓN Y REGISTRO\nUna vez obtenidos todos los datos obligatorios:\n\n1. Utilizá la herramienta de Google Sheets para verificar si el Número de caso ya se encuentra registrado.\n2. Si el Número de caso ya existe, no generes un registro duplicado.\n3. Si el Número de caso no existe, la guía es válida y el motivo está identificado, registrá el nuevo reclamo en Google Sheets.\n\n# ESCALAMIENTO\nDerivá a supervisión u operador humano cuando:\n\n- Falten datos críticos después de reiteradas consultas.\n- El caso requiera revisión presencial o intervención aduanera.\n- El usuario solicite atención personalizada.\n\n# RESTRICCIONES\n- Nunca inventes números de caso, guías ni información.\n- No registres casos duplicados.\n- No fuerces una clasificación cuando no exista información suficiente.\n- Utilizá las herramientas disponibles únicamente cuando corresponda.\n\n# FORMATO DE SALIDA\n\nSiempre devolvé la información utilizando exactamente la estructura\ndefinida por el Structured Output Parser.\n\nSi un dato todavía no fue proporcionado por el usuario, utilizá null.\nNunca inventes información para completar un campo.\n\nEl campo \"datos_completos\" será:\n\n- true: únicamente cuando numero_caso, numero_guia_madre,\n  numero_guia_hija y motivo_reclamo estén presentes.\n- false: cuando falte al menos uno de esos datos.\n\nSi datos_completos es false:\n- No utilices Google Sheets.\n- No registres el reclamo.\n- Indicá en \"respuesta_usuario\" todos los datos que todavía faltan.\n- clasificacion será null si todavía no existe información suficiente\n  para clasificar el reclamo.\n\nSi datos_completos es true:\n- Clasificá el reclamo.\n- Continuá con la verificación y registro.\n- respuesta_usuario será \"Datos completos.\"",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "84290762-fa1d-401e-ad46-ab463e031461",
+      "name": "AGENTE CLASIFICADOR"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        96,
+        192
+      ],
+      "id": "208e43e9-2d00-438a-a664-f20d4cc6ed52",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "jvN1P5yK74CDdaxt",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        192
+      ],
+      "id": "3740dbb2-52ce-4318-9b15-ce9fb12ac5c5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"numero_caso\": \"810006\",\n  \"numero_guia_madre\": \"125-12345678\",\n  \"numero_guia_hija\": \"XXX-12345678\",\n  \"motivo_reclamo\": \"levantar guia caída\",\n  \"clasificacion\": \"GUIA_CAIDA\",\n  \"datos_completos\": true,\n  \"respuesta_usuario\": \"Por favor indicá número de caso, guía madre, guía hija y motivo del reclamo.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        192
+      ],
+      "id": "9c6d017b-d0b8-4bb2-8caf-74f96f68b1a4",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hola. Para registrar un reclamo, por favor indicá en un único mensaje:\n\n• Número de caso\n• Número de guía madre\n• Número de guía hija\n• Motivo del reclamo\n\nEjemplo:\nCaso: 810002\nGuía madre: 123-87654321\nGuía hija: XXX-12345678\nMotivo: carga ingresada pero no localizada en depósito.",
+        "options": {
+          "responseMode": "responseNodes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "634e9a6f-eedb-4b2a-ad91-4e8ff72eaae6",
+      "name": "Cuando el CAC consulta",
+      "webhookId": "652e19db-89f3-4fe6-86f9-0a0c6074ad23",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e6750b47-0f86-4b7a-bc33-b52459cd5ad7",
+              "leftValue": "={{ $json.output.datos_completos }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        544,
+        0
+      ],
+      "id": "430c4413-2666-4594-bf83-60ca443ecb82",
+      "name": "si todos los datos están completos"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "message": "={{ $json.output.respuesta_usuario }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        160
+      ],
+      "id": "85124da1-ab9b-430d-9187-817384a359bf",
+      "name": "solicita info faltante",
+      "webhookId": "327ac162-4a50-4a66-af2b-dbf1cf7d738d"
+    },
+    {
+      "parameters": {
+        "message": "=Reclamo registrado correctamente.\nCaso: {{ $('AGENTE CLASIFICADOR').item.json.output.numero_caso }}\nGuia madre:{{ $('AGENTE CLASIFICADOR').item.json.output.numero_guia_madre }}\nGuia hija: {{ $('AGENTE CLASIFICADOR').item.json.output.numero_guia_hija }}\nClasificación: {{ $('AGENTE CLASIFICADOR').item.json.output.clasificacion }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        1232,
+        -16
+      ],
+      "id": "f3675342-9829-4e4b-a764-72a4d2bfa720",
+      "name": "confirmación de registro existoso",
+      "webhookId": "c1b369cd-4ce4-4670-9538-d9c9fd98a533"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "LOG DE CONTROL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AGENTE CLASIFICADOR": {
+      "main": [
+        [
+          {
+            "node": "si todos los datos están completos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LOG DE CONTROL": {
+      "main": [
+        [
+          {
+            "node": "confirmación de registro existoso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cuando el CAC consulta": {
+      "main": [
+        [
+          {
+            "node": "AGENTE CLASIFICADOR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "si todos los datos están completos": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "solicita info faltante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0acfabb3-2e80-43e7-8fe9-8a73a5b9c3e7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0421b845a31b1d19e4bd04389668acfb9b8eb64d98177cc04c86f23e882a1c97"
+  },
+  "nodeGroups": [],
+  "id": "1eyTyfYNNhsNk4y2",
+  "tags": []
+}
